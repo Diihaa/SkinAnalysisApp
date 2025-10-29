@@ -88,7 +88,7 @@ Once trained, start the Flask backend:
 
 ```bash
 cd server
-python app.py
+python mobile_app.py
 ```
 
 ---
@@ -96,7 +96,7 @@ python app.py
 ### 4. Running the Frontend App
 
 ```bash
-cd app
+cd mobile_app
 npm install
 expo start
 ```

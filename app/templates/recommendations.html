@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Recommendations{% endblock %}
+
+{% block content %}
+<div class="animate-fade">
+  <h2>Results</h2>
+  <p><b>Skin Type:</b> {{ skin_type }} | <b>Acne:</b> {{ acne }}</p>
+
+  {% if image_url %}
+    <img src="{{ image_url }}" alt="Uploaded" class="result-img animate-scale">
+  {% endif %}
+
+  <h3>Recommended Products</h3>
+  <div class="product-grid">
+    {% for p in products %}
+    <div class="product-card animate-fade">
+      <img src="{{ p.image }}" alt="{{ p.name }}">
+      <h4>{{ p.name }}</h4>
+      <a class="btn" href="{{ p.link }}" target="_blank">Buy Now</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

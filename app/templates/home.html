@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Home - SkinNoura{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero reveal" data-delay="100">
+  <h1>AI-Based Skin Analysis</h1>
+  <p>Scan your face, discover your skin type, and get curated product recommendations just for you.</p>
+
+  <div class="hero-buttons">
+    <a href="{{ url_for('main.dashboard') }}" class="btn hero-btn">Get Started</a>
+    {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('main.login') }}" class="btn secondary">Login</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Features / Tips Section -->
+<section class="features reveal" data-delay="200">
+  <h2>Ready to Start Your Skincare Journey?</h2>
+  <div class="feature-grid">
+    <div class="feature-card clickable reveal" data-delay="300" onclick="openTipsModal()" role="button" tabindex="0">
+      <h3>✨ 10 Amazing Tips</h3>
+      <p>Learn the top dermatologist-approved tips to keep your skin glowing every day.</p>
+    </div>
+
+    <div class="feature-card reveal" data-delay="400">
+      <h3>💧 Oily Skin Products</h3>
+      <p>Discover tone-based product recommendations tailored for oily & acne-prone skin.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="500">
+      <h3>🌿 Trusted Brands</h3>
+      <p>We only recommend the safest, dermatologist-trusted skincare brands for you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works reveal" data-delay="200">
+  <h2>How SkinNoura Works</h2>
+  <div class="steps-grid">
+
+    <!-- Step 1 -->
+    <div class="step-card reveal" data-delay="300">
+      <h3>📸 Step 1</h3>
+      <lottie-player
+        src="{{ url_for('static', filename='animations/faceid.json') }}"
+        background="transparent"
+        speed="1"
+        style="width:180px;height:180px;margin:auto;"
+        loop autoplay>
+      </lottie-player>
+      <p>Scan your face using our AI-powered camera tool.</p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card reveal" data-delay="400">
+      <h3>🤖 Step 2</h3>
+      <lottie-player
+        src="{{ url_for('static', filename='animations/ai-loading.json') }}"
+        background="transparent"
+        speed="1"
+        style="width:180px;height:180px;margin:auto;"
+        loop autoplay>
+      </lottie-player>
+      <p>Our AI analyzes your skin type, acne, and conditions in seconds.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card reveal" data-delay="500">
+      <h3>💄 Step 3</h3>
+      <lottie-player
+        src="{{ url_for('static', filename='animations/skincare.json') }}"
+        background="transparent"
+        speed="1"
+        style="width:180px;height:180px;margin:auto;"
+        loop autoplay>
+      </lottie-player>
+      <p>Receive personalized skincare tips & trusted product recommendations.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ✅ Why Choose Section -->
+<section class="why-choose reveal" data-delay="200">
+  <h2>Why Choose SkinNoura?</h2>
+  <div class="why-grid">
+    <div class="why-card reveal" data-delay="300">
+      <h3>✔️ AI-Powered Accuracy</h3>
+      <p>Dermatologist-inspired recommendations with instant scan results.</p>
+    </div>
+    <div class="why-card reveal" data-delay="400">
+      <h3>📸 Real-Time Scans</h3>
+      <p>Instant skin analysis with severity levels for acne detection.</p>
+    </div>
+    <div class="why-card reveal" data-delay="500">
+      <h3>🛍️ Trusted Brands</h3>
+      <p>Get safe product links from Amazon & Flipkart.</p>
+    </div>
+    <div class="why-card reveal" data-delay="600">
+      <h3>📊 Save Reports</h3>
+      <p>Track your past scans anytime from your dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials reveal" data-delay="200">
+  <h2>What Our Users Say</h2>
+  <div class="testimonial-grid">
+    <div class="testimonial-card reveal" data-delay="300">
+      <p>"SkinNoura helped me finally understand my skin type and choose the right products."</p>
+      <span>- Priya, Chennai</span>
+    </div>
+    <div class="testimonial-card reveal" data-delay="400">
+      <p>"Loved how simple it was! Just scanned and got my results instantly."</p>
+      <span>- Rahul, Bangalore</span>
+    </div>
+    <div class="testimonial-card reveal" data-delay="500">
+      <p>"The recommendations actually worked for my acne problem. Amazing app!"</p>
+      <span>- Ayesha, Delhi</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta reveal" data-delay="200">
+  <h2>Start Your Personalized Skincare Journey Today!</h2>
+  <p>Get real-time analysis, trusted product suggestions, and expert-inspired skincare tips.</p>
+  <a href="{{ url_for('main.dashboard') }}" class="btn">Scan Now</a>
+</section>
+
+<!-- ✅ Tips Modal -->
+<div id="tipsModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="tipsTitle">
+    <button class="close-btn" onclick="closeTipsModal()" aria-label="Close tips">&times;</button>
+    <h2 id="tipsTitle">Top 10 Skincare Steps</h2>
+
+    <!-- Animation same as other modals -->
+    <div class="scan-animation">
+      <lottie-player
+        src="{{ url_for('static', filename='animations/skincare.json') }}"
+        background="transparent"
+        speed="1"
+        style="width:220px;height:220px;margin:auto;"
+        loop autoplay>
+      </lottie-player>
+    </div>
+
+    <ol class="tips-steps">
+      <li><strong>Step 1: Cleanse Morning & Night</strong><p>Wash your face with a gentle, pH-balanced cleanser twice daily to remove dirt and oil.</p></li>
+      <li><strong>Step 2: Remove Makeup Before Bed</strong><p>Always take off makeup at night to prevent clogged pores and breakouts.</p></li>
+      <li><strong>Step 3: Apply Sunscreen</strong><p>Use SPF 30+ every morning — even indoors near windows — to protect against UV damage.</p></li>
+      <li><strong>Step 4: Stay Hydrated</strong><p>Drink at least 8 glasses of water and eat water-rich fruits like watermelon and cucumber.</p></li>
+      <li><strong>Step 5: Moisturize Daily</strong><p>Use gel-based moisturizers for oily skin or richer creams for dry skin to lock in hydration.</p></li>
+      <li><strong>Step 6: Avoid Popping Pimples</strong><p>Don’t pick or pop pimples — it increases scarring and spreads bacteria.</p></li>
+      <li><strong>Step 7: Choose Non-Comedogenic Products</strong><p>Pick skincare labeled “non-comedogenic” to avoid pore blockages.</p></li>
+      <li><strong>Step 8: Keep Things Clean</strong><p>Change pillowcases weekly and clean your phone screen often to prevent bacteria transfer.</p></li>
+      <li><strong>Step 9: Exfoliate Gently</strong><p>Exfoliate 1–2 times a week with a mild scrub or chemical exfoliant. Skip if skin feels irritated.</p></li>
+      <li><strong>Step 10: Sleep & Stress Management</strong><p>Get 7–8 hours of sleep and manage stress with yoga or meditation to reduce flare-ups.</p></li>
+    </ol>
+  </div>
+</div>
+
+
+<!-- ✅ Lottie Script (only once, at bottom) -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+{% endblock %}

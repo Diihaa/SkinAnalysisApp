@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebRTC Camera Test</title>
+</head>
+<body>
+  <h1>WebRTC Camera Test</h1>
+  <video id="video" autoplay playsinline width="640" height="480" style="border:2px solid purple;"></video>
+
+  <script>
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        document.getElementById("video").srcObject = stream;
+      } catch (err) {
+        console.error("Error accessing camera:", err);
+      }
+    }
+
+    startCamera();
+  </script>
+</body>
+</html>

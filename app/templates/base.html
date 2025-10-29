@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SkinNoura{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- ✅ Load Lottie first -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+
+  <!-- ✅ Then load your custom JS -->
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body class="preload">
+
+  <!-- Splash / Intro Loader -->
+  <div id="splash">
+    <div class="splash-inner">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SkinNoura Logo" class="splash-logo" />
+      <div class="splash-ring"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar app">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SkinNoura Logo">
+    </div>
+    <ul class="menu">
+      <li><a href="{{ url_for('main.home') }}">Home</a></li>
+      <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+      <li><a href="{{ url_for('main.help') }}">Help</a></li>
+    </ul>
+
+    <!-- User Profile Section -->
+    <div class="account">
+      <img src="{{ url_for('static', filename='images/user_default.png') }}" alt="User" class="profile-icon">
+      <div class="dropdown">
+        <button class="dropdown-btn">
+          {{ current_user.name if current_user.is_authenticated else "Guest" }}
+        </button>
+        <div class="dropdown-content">
+          {% if current_user.is_authenticated %}
+            <p>{{ current_user.email }}</p>
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('main.my_records') }}">My Results</a>
+            <a href="{{ url_for('main.help') }}">Help</a>
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+          {% else %}
+            <a href="{{ url_for('main.login') }}">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content app">
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <!-- ✅ Fixed Search Bar -->
+      <form action="{{ url_for('main.search_results') }}" method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search for Scanned Results" required>
+        <button type="submit" class="btn">Search</button>
+      </form>
+
+      <a href="{{ url_for('main.login') }}" class="btn">Login</a>
+      <a href="{{ url_for('main.dashboard') }}" class="btn">Dashboard</a>
+      <a href="{{ url_for('main.results') }}" class="btn">Results</a>
+    </div>
+
+    <!-- Page-specific content -->
+    {% block content %}{% endblock %}
+
+    <!-- Professional Footer -->
+    <footer>
+      <div class="footer-container">
+        <p>© 2025 <strong>SkinNoura</strong>. All Rights Reserved.</p>
+        <p class="tagline">Empowering your skincare journey with AI-powered analysis and trusted recommendations.</p>
+        <p class="small-text">Designed with ❤️ by SkinNoura Team</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Dropdown Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dropdownBtn = document.querySelector(".dropdown-btn");
+      const dropdown = document.querySelector(".dropdown");
+
+      if (dropdownBtn) {
+        dropdownBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove("show");
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

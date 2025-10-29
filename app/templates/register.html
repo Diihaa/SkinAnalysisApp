@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Register - SkinNoura{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Create an Account</h2>
+  <form method="POST" action="{{ url_for('main.register') }}">
+    <div class="form-group">
+      <input type="text" name="name" placeholder="Enter your name" required>
+    </div>
+    <div class="form-group">
+      <input type="email" name="email" placeholder="Enter your email" required>
+    </div>
+    <div class="form-group">
+      <input type="password" name="password" placeholder="Enter a password" required>
+    </div>
+    <button type="submit" class="btn">Register</button>
+  </form>
+  <p>
+    Already have an account?
+    <a href="{{ url_for('main.login') }}">Login here</a>
+  </p>
+</div>
+{% endblock %}

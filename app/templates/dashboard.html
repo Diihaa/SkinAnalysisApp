@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container animate-fade">
+  <div class="dashboard-card">
+    <h3>📹 Live Skin Analysis</h3>
+
+    <!-- Camera feed -->
+    <img id="ai-feed" class="camera-feed" src="" width="600" height="400" alt="AI Camera Feed">
+
+    <!-- Start/Stop Buttons -->
+    <div class="btn-group">
+      <button id="start-btn" class="btn start-btn">▶️ Start Scan</button>
+      <button id="stop-btn" class="btn stop-btn">⏹️ Stop Scan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const feed = document.getElementById("ai-feed");
+  const startBtn = document.getElementById("start-btn");
+  const stopBtn = document.getElementById("stop-btn");
+
+  let scanning = false;
+
+  // Start Scan
+  startBtn.addEventListener("click", () => {
+    if (!scanning) {
+      feed.src = "{{ url_for('main.video_feed') }}";
+      scanning = true;
+    }
+  });
+
+  // Stop Scan → call backend and redirect to results
+  stopBtn.addEventListener("click", () => {
+    if (scanning) {
+      fetch("{{ url_for('main.stop_scan') }}")
+        .then(() => {
+          // Redirect to results page after analysis
+          window.location.href = "{{ url_for('main.results') }}";
+        })
+        .catch(err => {
+          console.error("Error stopping scan:", err);
+          alert("Error stopping scan. Please try again.");
+        });
+      scanning = false;
+      feed.src = "";
+    }
+  });
+</script>
+
+<style>
+/* Dashboard Layout */
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.dashboard-card {
+  background: #fff6f9;
+  padding: 30px;
+  border-radius: 16px;
+  width: 650px;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+  border: 2px solid #ffd6e8;
+}
+
+/* Heading */
+.dashboard-card h3 {
+  color: #c44569;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Camera Feed */
+.camera-feed {
+  border: 2px solid #ffd6e8;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  width: 100%;
+  height: auto;
+}
+
+/* Button Group */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+/* Start Button (pink theme) */
+.start-btn {
+  background: linear-gradient(90deg, #f497b6, #f8becf);
+  color: white;
+}
+.start-btn:hover {
+  background: #f06b98;
+  transform: scale(1.05);
+}
+
+/* Stop Button (grey) */
+.stop-btn {
+  background: linear-gradient(90deg, #999, #777);
+  color: white;
+}
+.stop-btn:hover {
+  background: #555;
+  transform: scale(1.05);
+}
+</style>
+{% endblock %}

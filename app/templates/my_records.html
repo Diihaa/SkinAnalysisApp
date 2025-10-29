@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}My Analysis Records{% endblock %}
+
+{% block content %}
+<div class="records-container">
+  <h2 class="records-title">📜 My Past Skin Analysis Reports</h2>
+
+  {% if records %}
+    <ul class="records-list">
+      {% for r in records %}
+        <li class="record-card">
+          <!-- Face Image -->
+          {% if r.filename %}
+            <img src="{{ url_for('static', filename='captures/' ~ r.filename) }}"
+                 alt="Face Capture" class="record-photo">
+          {% endif %}
+
+          <!-- Report Info -->
+          <div class="record-info">
+            <p><strong>Skin Type (CNN):</strong> {{ r.cnn_condition }}</p>
+            <p><strong>Acne Count (YOLO):</strong> {{ r.acne_count }}</p>
+            <p><strong>Acne Severity:</strong> {{ r.acne_severity }}</p>
+            <p><strong>Generated:</strong> {{ r.created_at.strftime("%d %b %Y, %I:%M %p") }} (IST)</p>
+
+            <!-- Probabilities -->
+            {% if r.parsed_probs %}
+              <details>
+                <summary>Show Probabilities</summary>
+                <ul>
+                  {% for label, value in r.parsed_probs.items() %}
+                    <li>{{ label }}: {{ value }}%</li>
+                  {% endfor %}
+                </ul>
+              </details>
+            {% endif %}
+
+            <!-- Download Button -->
+            <a href="{{ url_for('main.download_report', record_id=r.id) }}" class="btn secondary">
+              📥 Download PDF
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No records found yet. Run a scan first!</p>
+  {% endif %}
+</div>
+
+<style>
+.records-container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #f5ebff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(90,42,166,.12);
+}
+.records-title {
+  text-align: center;
+  color: #5a2aa6;
+  margin-bottom: 20px;
+}
+.records-list {
+  list-style: none;
+  padding: 0;
+}
+.record-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.record-photo {
+  width: 120px;
+  border-radius: 8px;
+  border: 2px solid #d2b7ff;
+}
+.record-info {
+  flex: 1;
+}
+.btn.secondary {
+  display: inline-block;
+  margin-top: 10px;
+  background: #5a2aa6;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.btn.secondary:hover {
+  background: #4b238c;
+}
+details {
+  margin-top: 6px;
+  cursor: pointer;
+}
+details summary {
+  font-weight: bold;
+  color: #333;
+}
+</style>
+{% endblock %}

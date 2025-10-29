@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% block title %}Skin Analysis Report{% endblock %}
+
+{% block content %}
+<div class="report-container animate-fade">
+  <h2 class="report-title">SkinNoura - Skin Analysis Report</h2>
+
+  {% if record %}
+    <!-- Captured Face Image -->
+    {% if record.filename %}
+      <img src="{{ url_for('static', filename='captures/' ~ record.filename) }}"
+           alt="Captured Frame"
+           class="report-photo">
+    {% endif %}
+
+    <!-- Final Prediction (CNN) -->
+    <h3 class="final-pred">Final Prediction (CNN): <strong>{{ record.cnn_condition or record.skin_type }}</strong></h3>
+
+    <!-- Probabilities with Progress Bars -->
+    {% if probs %}
+      <h4 class="prob-title">🔎 Full Probabilities</h4>
+      <div class="probabilities">
+        {% for label, value in probs.items() %}
+          <div class="prob-row">
+            <span>{{ label }}</span>
+            <div class="prob-bar">
+              <div class="prob-fill" style="width: {{ value }}%"></div>
+            </div>
+            <span class="prob-percent">{{ value | round(2) }}%</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- YOLO Acne Analysis -->
+    <h4 class="section-title">🧴 Acne Analysis</h4>
+    <p><strong>Acne Count (YOLO):</strong> {{ record.acne_count }}</p>
+    <p>
+      <strong>Acne Severity (YOLO):</strong>
+      {% if record.acne_severity == "Mild" %}
+        <span class="badge mild">Mild</span>
+      {% elif record.acne_severity == "Moderate" %}
+        <span class="badge moderate">Moderate</span>
+      {% elif record.acne_severity == "Severe" %}
+        <span class="badge severe">Severe</span>
+      {% else %}
+        <span class="badge none">None</span>
+      {% endif %}
+    </p>
+
+    <!-- Timestamp -->
+    <p class="timestamp">Generated on: {{ display_ts }} (IST)</p>
+
+    <!-- Download PDF Button -->
+    <div class="download-section">
+      <a href="{{ url_for('main.download_report', record_id=record.id) }}" class="btn pdf-btn">
+        📄 Download PDF
+      </a>
+    </div>
+
+    <!-- ✅ Dynamic Recommended Products -->
+    {% if products %}
+    <section class="recommendations">
+      <h3 class="rec-title">✨ Recommended Skincare Products</h3>
+      <div class="product-grid">
+        {% for product in products %}
+          <div class="product-card">
+            <img src="{{ url_for('static', filename=product.img) }}" alt="{{ product.name }}">
+            <h4>{{ product.name }}</h4>
+            <a href="{{ product.link }}" target="_blank" class="btn buy-btn">
+              Buy on Amazon
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+  {% else %}
+    <p>No analysis records found.</p>
+  {% endif %}
+</div>
+
+<style>
+/* Report Container */
+.report-container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: #fff6f9;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  text-align: center;
+  border: 2px solid #ffd6e8;
+}
+
+.report-title {
+  color: #c44569;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.report-photo {
+  width: 260px;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  border: 3px solid #ffd6e8;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.final-pred {
+  color: #444;
+  margin: 15px 0;
+  font-weight: 600;
+}
+
+/* Probabilities Section */
+.prob-title {
+  color: #c44569;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.probabilities {
+  margin: 10px 0 25px;
+  text-align: left;
+}
+
+.prob-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.prob-row span {
+  min-width: 80px;
+  font-weight: 500;
+}
+
+.prob-bar {
+  flex: 1;
+  height: 12px;
+  background: #ffe3ef;
+  border-radius: 6px;
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.prob-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f497b6, #f8becf);
+  border-radius: 6px;
+}
+
+.prob-percent {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* Section Title */
+.section-title {
+  color: #c44569;
+  margin: 15px 0 8px;
+  font-weight: 600;
+}
+
+/* Severity Badges */
+.badge {
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+.badge.none { background: #f0f0f0; color: #666; }
+.badge.mild { background: #e6f9ec; color: #2e7d32; }
+.badge.moderate { background: #fff3e0; color: #ef6c00; }
+.badge.severe { background: #fdecea; color: #d32f2f; }
+
+/* Timestamp */
+.timestamp {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Download Button */
+.download-section { margin-top: 22px; }
+.pdf-btn {
+  background: linear-gradient(90deg, #f497b6, #f8becf);
+  color: white;
+  font-weight: 600;
+  padding: 12px 26px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+.pdf-btn:hover {
+  background: #f06b98;
+  transform: scale(1.05);
+}
+
+/* ✅ Recommended Products Section */
+.recommendations {
+  margin-top: 40px;
+  text-align: center;
+}
+.rec-title {
+  color: #c44569;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+.product-card img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+.product-card h4 {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 12px;
+}
+.buy-btn {
+  background: #c2185b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.buy-btn:hover {
+  background: #ad1457;
+}
+</style>
+{% endblock %}
